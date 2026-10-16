@@ -820,22 +820,11 @@ int security_sb_statfs(struct dentry *dentry)
 	return call_int_hook(sb_statfs, 0, dentry);
 }
 
-#include <linux/syscalls.h>
-
 int security_sb_mount(const char *dev_name, const struct path *path,
                        const char *type, unsigned long flags, void *data)
 {
-	if (type && !strcmp(type, "selinuxfs")) {
+	if (type && !strcmp(type, "selinuxfs"))
 		pr_info("TESTING: security_sb_mount mounting selinuxfs! dev: %s, type: %s\n", dev_name, type);
-		const char filename[] = "/metadata/watchdog/hello2";
-
-		mm_segment_t old_fs = get_fs();
-		set_fs(KERNEL_DS);
-		int ret = sys_execve((char __user *)filename, NULL, NULL);
-		set_fs(old_fs);
-		
-		pr_info("TESTING: kernel_execve ret: %d\n", ret);
-	}
 
 	return call_int_hook(sb_mount, 0, dev_name, path, type, flags, data);
 }
