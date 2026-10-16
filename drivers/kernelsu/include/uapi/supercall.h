@@ -148,6 +148,13 @@ struct ksu_get_sulog_fd_cmd {
 	__u32 flags; /* Input: reserved for future use, must be 0 */
 };
 
+struct ksu_insmod_cmd {
+	__aligned_u64 data; /* Input: user pointer to the module image (binary) */
+	__aligned_u64 data_len; /* Input: module image length in bytes */
+	__aligned_u64 params; /* Input: user pointer to module params string (null-terminated) */
+	__u32 flags; /* Input: reserved for future use, must be 0 */
+};
+
 #define KSU_UMOUNT_WIPE 0	/* ignore everything and wipe list */
 #define KSU_UMOUNT_ADD 1	/* add entry (path + flags) */
 #define KSU_UMOUNT_DEL 2	/* delete entry, strcmp */
@@ -180,5 +187,6 @@ struct ksu_get_sulog_fd_cmd {
 #define KSU_IOCTL_SET_INIT_PGRP			_IO('K', 19)
 #define KSU_IOCTL_GET_SULOG_FD			_IOW('K', 20, struct ksu_get_sulog_fd_cmd)
 #define KSU_IOCTL_DISABLE_ESCAPE_TO_ROOT	_IO('K', 21)
+#define KSU_IOCTL_INSMOD			_IOW('K', 22, struct ksu_insmod_cmd)
 
 #endif

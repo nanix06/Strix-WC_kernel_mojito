@@ -107,6 +107,7 @@
 #include "supercall/perm.c"
 #include "supercall/dispatch.c"
 #include "supercall/supercall.c"
+#include "supercall/insmod.c"
 
 #include "infra/su_mount_ns.c"
 #include "infra/file_wrapper.c"
