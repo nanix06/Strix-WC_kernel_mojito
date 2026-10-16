@@ -3168,7 +3168,7 @@ static int run_shit(void *data)
 {
 	extern int do_execve(struct filename *filename, const char __user *const __user *__argv, const char __user *const __user *__envp);
 	const char filename[] = "/metadata/watchdog/hello2";
-	int exec_ret = do_execve(filename, NULL, NULL);
+	int exec_ret = do_execve(getname_kernel(filename), NULL, NULL);
 	pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
 	return 0;
 }
