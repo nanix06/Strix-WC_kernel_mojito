@@ -8,8 +8,6 @@
 
 #include <linux/types.h>
 
-#ifdef CONFIG_COMPAT
-
 #include <linux/stat.h>
 #include <linux/param.h>	/* for HZ */
 #include <linux/sem.h>
@@ -26,6 +24,8 @@
 #ifndef COMPAT_USE_64BIT_TIME
 #define COMPAT_USE_64BIT_TIME 0
 #endif
+
+#ifdef CONFIG_COMPAT
 
 #ifndef __SC_DELOUSE
 #define __SC_DELOUSE(t,v) ((__force t)(unsigned long)(v))

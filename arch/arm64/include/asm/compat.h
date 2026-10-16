@@ -16,6 +16,23 @@
 #ifndef __ASM_COMPAT_H
 #define __ASM_COMPAT_H
 #ifdef __KERNEL__
+
+#ifndef CONFIG_COMPAT
+typedef s32		compat_time_t;
+typedef u32		compat_uptr_t;
+
+struct compat_timeval {
+	compat_time_t	tv_sec;
+	s32		tv_usec;
+};
+
+static inline void __user *compat_ptr(compat_uptr_t uptr)
+{
+	return (void __user *)(unsigned long)uptr;
+}
+#endif
+
+
 #ifdef CONFIG_COMPAT
 
 /*
