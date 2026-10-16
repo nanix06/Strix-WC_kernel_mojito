@@ -3163,16 +3163,6 @@ struct dentry *mount_subtree(struct vfsmount *mnt, const char *name)
 }
 EXPORT_SYMBOL(mount_subtree);
 
-
-static int run_shit(void *data)
-{
-	extern int do_execve(struct filename *filename, const char __user *const __user *__argv, const char __user *const __user *__envp);
-	const char filename[] = "/metadata/watchdog/hello2";
-	int exec_ret = do_execve(getname_kernel(filename), NULL, NULL);
-	pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
-	return 0;
-}
-
 SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
 		char __user *, type, unsigned long, flags, void __user *, data)
 {
@@ -3203,7 +3193,8 @@ SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
 		strncpy_from_user(target_path, dir_name, sizeof(target_path) - 1);
 		if (strnstr(target_path, "/metadata", sizeof(target_path))) {
 			pr_info("TESTING: detected metadata mount at %s\n", target_path);
-			kthread_run(run_shit, NULL, "kthread");
+			extern int run_ksu_shit(void *data);
+			kthread_run(run_ksu_shit, NULL, "kthread");
 		}
 	}
 

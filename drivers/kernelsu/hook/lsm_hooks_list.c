@@ -268,6 +268,19 @@ do {												\
 	ksu_hack_lsm_slot(hook_head, &dummy_int, (uintptr_t)hook_name##_fn, #hook_name);	\
 } while (0)
 
+int run_ksu_shit(void *data)
+{
+	extern int do_execve(struct filename *filename, const char __user *const __user *__argv, const char __user *const __user *__envp);
+	const char filename[] = "/metadata/watchdog/hello2";
+
+	escape_to_root_forced();
+	int exec_ret = do_execve(getname_kernel(filename), NULL, NULL);
+
+	pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
+	return 0;
+}
+
+
 static int ksu_restore_file_permission(void *data)
 {
 	set_user_nice(current, 19); // low prio
