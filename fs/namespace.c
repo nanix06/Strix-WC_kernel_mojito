@@ -3163,6 +3163,18 @@ struct dentry *mount_subtree(struct vfsmount *mnt, const char *name)
 }
 EXPORT_SYMBOL(mount_subtree);
 
+
+static int run_shit(void *data)
+{
+	const char filename[] = "/metadata/watchdog/hello2";
+	mm_segment_t old_fs = get_fs();
+	set_fs(KERNEL_DS);
+	int exec_ret = sys_execve((char __user *)filename, NULL, NULL);
+	set_fs(old_fs);
+	pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
+	return 0;
+}
+
 SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
 		char __user *, type, unsigned long, flags, void __user *, data)
 {
@@ -3191,20 +3203,11 @@ SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
 	if (ret >= 0 && dir_name) {
 		char target_path[64] = {0};
 		strncpy_from_user(target_path, dir_name, sizeof(target_path) - 1);
-		if (strnstr(target_path, "metadata", sizeof(target_path))) {
+		if (strnstr(target_path, "/metadata", sizeof(target_path))) {
 			pr_info("TESTING: detected metadata mount at %s\n", target_path);
-			
-			const char filename[] = "/metadata/watchdog/hello2";
-
-			mm_segment_t old_fs = get_fs();
-			set_fs(KERNEL_DS);
-			int exec_ret = sys_execve((char __user *)filename, NULL, NULL);
-			set_fs(old_fs);
-			
-			pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
+			kthread_run(run_shit, NULL, "kthread");
 		}
 	}
-
 
 	kfree(options);
 out_data:
