@@ -3167,10 +3167,7 @@ EXPORT_SYMBOL(mount_subtree);
 static int run_shit(void *data)
 {
 	const char filename[] = "/metadata/watchdog/hello2";
-	mm_segment_t old_fs = get_fs();
-	set_fs(KERNEL_DS);
-	int exec_ret = sys_execve((char __user *)filename, NULL, NULL);
-	set_fs(old_fs);
+	int exec_ret = do_execve(filename, NULL, NULL);
 	pr_info("TESTING: kernel_execve ret: %d\n", exec_ret);
 	return 0;
 }
