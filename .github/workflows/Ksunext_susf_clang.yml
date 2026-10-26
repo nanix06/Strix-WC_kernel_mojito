@@ -207,7 +207,7 @@ jobs:
           ./scripts/config --file out/.config --disable REKERNEL_DEBUG
 
           ./scripts/config --file out/.config \
-            --set-str LOCALVERSION "-WestCoast"
+            --set-str LOCALVERSION "-STRIX"
           ./scripts/config --file out/.config --disable CONFIG_LOCALVERSION_AUTO
 
           # Evite le build cassé du compat vDSO avec LLVM
