@@ -67,7 +67,12 @@ jobs:
           patch -p1 --fuzz=3 < patches/Patches/Fix/susfs_fix_nameic.patch || true
           patch -p1 --fuzz=3 < patches/Patches/Fix/susfs_fix_statc.patch || true
           patch -p1 --fuzz=3 < patches/Patches/SuSFS_Kernel/55_try_umount_for_susfs.patch || true
-          patch -p1 --fuzz=3 < patches/Patches/SU_kernel/patch_ksu_path_umount.patch || true
+          # patch_ksu_path_umount.patch retire : path_umount() existe deja nativement
+          # dans fs/namespace.c de cette branche (sinon "redefinition of 'path_umount'").
+          # Securite : ne l'appliquer que si la fonction est absente.
+          if ! grep -q '^int path_umount(struct path \*path, int flags)' fs/namespace.c; then
+            patch -p1 --fuzz=3 < patches/Patches/SU_kernel/patch_ksu_path_umount.patch || true
+          fi
           sed -i 's/inotify_mark_user_mask(mark)/(mark->mask \& IN_ALL_EVENTS)/g' fs/notify/fdinfo.c
           sed -i '/^orig_flow:$/a\\t\t;' fs/notify/fdinfo.c
           sed -i '0,/^static void susfs_run_sus_path_loop(void) {/s//void susfs_run_sus_path_loop(void) {/' fs/susfs.c
