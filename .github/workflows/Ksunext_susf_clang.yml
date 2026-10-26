@@ -28,7 +28,7 @@ jobs:
       - name: Télécharger le source
         uses: actions/checkout@v4
         with:
-          ref: A17
+          ref: personal
           fetch-depth: 1
           submodules: recursive
 
